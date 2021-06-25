@@ -88,7 +88,7 @@ export default class AddressesList extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-8">
                     <h4>Addresses List</h4>
 
                     <ul className="list-group">
@@ -110,7 +110,7 @@ export default class AddressesList extends Component {
                         ))}
                     </ul>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                     {currentAddress ? (
                         <div>
                             <h4>Address</h4>
