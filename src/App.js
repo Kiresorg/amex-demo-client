@@ -10,22 +10,25 @@ class App extends Component {
   render() {
     return(
       <div>
-        <nav>
-          <div>
-            <li>
-              <Link to={"/addresses"}>
-                Addresses
+        <nav className="navbar navbar-expand navbar-dark bg-dark">
+          <a href="/customers" className="navbar-brand">
+            Home
+          </a>
+          <div className="navbar-nav mr-auto">
+            <li className="nav-item">
+              <Link to={"/customers"} className="nav-link">
+                Customers
               </Link>
             </li>
-            <li>
-              <Link to={"/customers"}>
-                Customers
+            <li className="nav-item">
+              <Link to={"/addresses"} className="nav-link">
+                Addresses
               </Link>
             </li>
           </div>
         </nav>
 
-        <div>
+        <div className="container mt-3">
           <Switch>
             <Route path="/addresses" component={AddressesList} />
             <Route path="/customers" component={CustomersList} />
