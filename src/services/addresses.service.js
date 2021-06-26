@@ -8,6 +8,10 @@ class AddressDataService {
     search(searchTerm) {
         return http.get(`/address?searchTerm=${searchTerm}`);
     }
+
+    get(id) {
+        return http.get(`/address/${id}`);
+    }
 }
 
 export default new AddressDataService();

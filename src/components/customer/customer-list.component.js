@@ -1,41 +1,29 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import CustomerDataService from '../../services/customer.service';
+import AddressDataService from '../../services/addresses.service';
 import { Link } from 'react-router-dom';
+import Customer from './customer.component';
 
-export default class CustomersList extends Component {
-    constructor(props) {
-        super(props);
-        this.retrieveCustomers = this.retrieveCustomers.bind(this);
-        this.setActiveCustomer = this.setActiveCustomer.bind(this);
-        this.onChangeSearchCustomer = this.onChangeSearchCustomer.bind(this);
-        this.search = this.search.bind(this);
 
-        this.state = {
-            customers: [],
-            currentCustomer: null,
-            currentIndex: -1,
-            searchTerm: ""
-        };
-    }
+export default function CustomersList() {
+    const [customers, setCustomers] = useState([]);
+    const [currentCustomer, setCurrentCustomer] = useState(null);
+    const [currentIndex, setCurrentIndex] = useState(-1);
+    const [searchTerm, setSearchTerm] = useState("");
 
-    componentDidMount() {
-        this.retrieveCustomers();
-    }
+    useEffect(() => {
+        retrieveCustomers()
+    }, []);
 
-    onChangeSearchCustomer(e) {
+    const onChangeSearchTerm = e => {
         const searchTerm = e.target.value;
+        setSearchTerm(searchTerm);
+      };
 
-        this.setState({
-            searchTerm: searchTerm
-        });
-    }
-
-    retrieveCustomers() {
+    const retrieveCustomers = () => {
         CustomerDataService.getAll()
             .then(response => {
-                this.setState({
-                    customers: response.data
-                });
+                setCustomers(response.data);
                 console.log(response.data);
             })
             .catch(error => {
@@ -43,28 +31,30 @@ export default class CustomersList extends Component {
             });
     }
 
-    setActiveCustomer(customer, index) {
-        this.setState({
-            currentCustomer: customer,
-            currentIndex: index
-        })
-    }
+    const refreshList = () => {
+        retrieveCustomers();
+        setCurrentCustomer(null);
+        setCurrentIndex(-1);
+      };
+    
+      const setActiveCustomer = (customer, index) => {
+        setCurrentCustomer(customer);
+        setCurrentIndex(index);
+      };
 
-    search() {
-        CustomerDataService.search(this.state.searchTerm)
-            .then(response => {
-                this.setState({
-                    customers: response.data
-                });
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }
-
-    render() {
-        const { customers, currentCustomer, currentIndex, searchTerm } = this.state;
+      const findByTerm = () => {
+        CustomerDataService.search(searchTerm)
+          .then(response => {
+            setCustomers(response.data);
+            console.log(response.data);
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      };
+    
+    // render() {
+    //     const { customers, currentCustomer, currentIndex, searchTerm } = this.state;
 
         return(
             <div className="list row">
@@ -75,13 +65,13 @@ export default class CustomersList extends Component {
                             className="form-control"
                             placeholder="Search terms will check first and last names"
                             value={searchTerm}
-                            onChange={this.onChangeSearchCustomer}
+                            onChange={onChangeSearchTerm}
                         />
                         <div className="input-group-append">
                             <button
                                 className="btn btn-outline-secondary"
                                 type="button"
-                                onClick={this.search}
+                                onClick={findByTerm}
                             >
                             Search
                             </button>
@@ -99,16 +89,15 @@ export default class CustomersList extends Component {
                                     "list-group-item " +
                                     (index === currentIndex ? "active" : "")
                                 }
-                            onClick={() => this.setActiveCustomer(customer, index)}
-                            key={index}
-                            
+                                onClick={() => setActiveCustomer(customer, index)}
+                                key={index}
                             >
                                 {customer.last_name}{", "}{customer.first_name}
                             </li>
                         ))}
                     </ul>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-4">
                     {currentCustomer ? (
                         <div>
                             <h4>Customer</h4>
@@ -165,6 +154,6 @@ export default class CustomersList extends Component {
                     )}
                 </div>
             </div>
-        )
-    }
+        );
+    
 }
