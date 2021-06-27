@@ -4,6 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Route, Switch, Link } from 'react-router-dom';
 import AddressesList from './components/address/address-list.component'
 import CustomersList from './components/customer/customer-list.component';
+import Customer from './components/customer/customer.component';
+import CustomerDashboard from './components/dashboard/customer.dashboard';
 
 function App() {
   return(
@@ -28,9 +30,11 @@ function App() {
 
       <div className="container mt-3">
         <div>
-          <Switch>
-            <Route path="/customers" component={CustomersList} />
-          </Switch>
+          
+            <Route path="/customers" component={CustomerDashboard} />
+            <Route path="/addresses" component={AddressesList} />
+            <Route path="/customers/:id"><Customer /></Route>
+          
         </div>
       </div>
     </div>
